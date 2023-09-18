@@ -1,12 +1,16 @@
 import pytest
 from playwright.sync_api import Page, expect
+from pages.home import HomePage
+# page = browser.new_page()
 
 
 @pytest.fixture(scope="function", autouse=True)
 def before_each_after_each(page: Page):
     print("beforeEach")
     # Go to the starting url before each test.
-    page.goto("https://www.automationexercise.com/")
+    home_page = HomePage(page)
+    home_page.navigate()
+    # page.goto("https://www.automationexercise.com/")
     yield
     print("afterEach")
 
@@ -19,4 +23,6 @@ def test_that_New_User_Signup_is_visible(page: Page):
     link = page.locator('//ul[@class="nav navbar-nav"]/li')
     for links in link.element_handles():
         linkF = links.get_attribute('href')
+        if linkF == "/login":
+            links.click()
         print(linkF)
